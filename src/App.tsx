@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 type FormElem = React.FormEvent<HTMLFormElement>;
+
 interface ITodo {
   text: string;
   complete: boolean;
@@ -18,8 +18,20 @@ const App: React.FC = () => {
     setValue("");
   };
 
-  const addTodo = (text: string) => {
+  const addTodo = (text: string): void => {
     const newTodos: ITodo[] = [...todos, { text, complete: false }];
+    setTodos(newTodos);
+  };
+
+  const completeTodo = (index: number): void => {
+    const newTodos: ITodo[] = [...todos];
+    newTodos[index].complete = !newTodos[index].complete;
+    setTodos(newTodos);
+  };
+
+  const removeTodo = (index: number): void => {
+    const newTodos: ITodo[] = [...todos];
+    newTodos.splice(index, 1);
     setTodos(newTodos);
   };
 
@@ -32,7 +44,15 @@ const App: React.FC = () => {
       </form>
       <ul>
         {todos.map((todo: ITodo, index: number) => (
-          <li key={index}>{todo.text}</li>
+          <li style={{ textDecoration: todo.complete ? "line-through" : "" }} key={index}>
+            <span>{todo.text}</span>
+            <button type="button" onClick={() => completeTodo(index)}>
+              {todo.complete ? "Incomplete" : "Complete"}
+            </button>
+            <button type="button" onClick={() => removeTodo(index)}>
+              Remove
+            </button>
+          </li>
         ))}
       </ul>
     </Fragment>
